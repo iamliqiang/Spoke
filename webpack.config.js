@@ -67,7 +67,8 @@ function createHTTPSConfig() {
   }
 }
 
-const defaultHostName = "hubs.local";
+// const defaultHostName = "hubs.local";
+const defaultHostName = "0xspace.net";
 const host = process.env.HOST_IP || defaultHostName;
 const port = process.env.HOST_PORT || 9090;
 
@@ -93,7 +94,7 @@ module.exports = env => {
       },
       before: function(app) {
         // be flexible with people accessing via a local reticulum on another port
-        app.use(cors({ origin: /hubs\.local(:\d*)?$/ }));
+        app.use(cors({ origin: /0xspace\.net$/ }));
       }
     },
 
