@@ -73,10 +73,13 @@ export const proxiedUrlFor = url => {
 };
 
 export const scaledThumbnailUrlFor = (url, width, height) => {
-  if (configs.RETICULUM_SERVER.includes("hubs.local") && url.includes("hubs.local")) {
+//  if (configs.RETICULUM_SERVER.includes("hubs.local") && url.includes("hubs.local")) {
+//    return url;
+//  }
+
+  if (configs.RETICULUM_SERVER) {
     return url;
   }
-
   return `https://${configs.THUMBNAIL_SERVER}/thumbnail/${farsparkEncodeUrl(url)}?w=${width}&h=${height}`;
 };
 
