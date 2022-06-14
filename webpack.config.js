@@ -2,12 +2,20 @@
 const dotenv = require("dotenv");
 
 if (process.env.NODE_ENV === "production") {
-  dotenv.config({ path: ".env.prod" });
+  dotenv.config({
+    path: ".env.prod"
+  });
 } else if (process.env.NODE_ENV === "test") {
-  dotenv.config({ path: ".env.test" });
+  dotenv.config({
+    path: ".env.test"
+  });
 } else {
-  dotenv.config({ path: ".env" });
-  dotenv.config({ path: ".env.defaults" });
+  dotenv.config({
+    path: ".env"
+  });
+  dotenv.config({
+    path: ".env.defaults"
+  });
 }
 
 const fs = require("fs");
@@ -26,33 +34,30 @@ function createHTTPSConfig() {
     const key = fs.readFileSync(path.join(__dirname, "certs", "key.pem"));
     const cert = fs.readFileSync(path.join(__dirname, "certs", "cert.pem"));
 
-    return { key, cert };
+    return {
+      key,
+      cert
+    };
   } else {
     const pems = selfsigned.generate(
-      [
-        {
-          name: "commonName",
-          value: "localhost"
-        }
-      ],
-      {
+      [{
+        name: "commonName",
+        value: "localhost"
+      }], {
         days: 365,
         algorithm: "sha256",
-        extensions: [
-          {
-            name: "subjectAltName",
-            altNames: [
-              {
-                type: 2,
-                value: "localhost"
-              },
-              {
-                type: 2,
-                value: "hubs.local"
-              }
-            ]
-          }
-        ]
+        extensions: [{
+          name: "subjectAltName",
+          altNames: [{
+              type: 2,
+              value: "localhost"
+            },
+            {
+              type: 2,
+              value: "hubs.local"
+            }
+          ]
+        }]
       }
     );
 
@@ -92,9 +97,11 @@ module.exports = env => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      before: function(app) {
+      before: function (app) {
         // be flexible with people accessing via a local reticulum on another port
-        app.use(cors({ origin: /0xspace\.net$/ }));
+        app.use(cors({
+          origin: /0xspace\.net(:\d*)?$/
+        }));
       }
     },
 
@@ -104,8 +111,7 @@ module.exports = env => {
     },
 
     module: {
-      rules: [
-        {
+      rules: [{
           test: /\.(png|jpg|jpeg|gif|svg)(\?.*$|$)/,
           use: {
             loader: "file-loader",
@@ -147,15 +153,13 @@ module.exports = env => {
         },
         {
           test: /\.(bin)$/,
-          use: [
-            {
-              loader: "file-loader",
-              options: {
-                name: "[name]-[hash].[ext]",
-                outputPath: "assets/models"
-              }
+          use: [{
+            loader: "file-loader",
+            options: {
+              name: "[name]-[hash].[ext]",
+              outputPath: "assets/models"
             }
-          ]
+          }]
         },
         {
           test: /\.(mp4|webm)(\?.*$|$)/,
@@ -218,36 +222,34 @@ module.exports = env => {
     },
 
     optimization: {
-      minimizer: [new TerserJSPlugin({ sourceMap: true, parallel: true, cache: path.join(__dirname, ".tersercache") })]
+      minimizer: [new TerserJSPlugin({
+        sourceMap: true,
+        parallel: true,
+        cache: path.join(__dirname, ".tersercache")
+      })]
     },
 
     plugins: [
       new BundleAnalyzerPlugin({
         analyzerMode: env && env.BUNDLE_ANALYZER ? "server" : "disabled"
       }),
-      new CopyWebpackPlugin([
-        {
-          from: path.join(
-            __dirname,
-            "src",
-            "assets",
-            process.env.IS_MOZ === "true" ? "favicon-spoke.ico" : "favicon-editor.ico"
-          ),
-          to: "assets/images/favicon.ico"
-        }
-      ]),
-      new CopyWebpackPlugin([
-        {
-          from: path.join(__dirname, "src", "assets", "favicon-spoke.ico"),
-          to: "assets/images/favicon-spoke.ico"
-        }
-      ]),
-      new CopyWebpackPlugin([
-        {
-          from: path.join(__dirname, "src", "assets", "favicon-editor.ico"),
-          to: "assets/images/favicon-editor.ico"
-        }
-      ]),
+      new CopyWebpackPlugin([{
+        from: path.join(
+          __dirname,
+          "src",
+          "assets",
+          process.env.IS_MOZ === "true" ? "favicon-spoke.ico" : "favicon-editor.ico"
+        ),
+        to: "assets/images/favicon.ico"
+      }]),
+      new CopyWebpackPlugin([{
+        from: path.join(__dirname, "src", "assets", "favicon-spoke.ico"),
+        to: "assets/images/favicon-spoke.ico"
+      }]),
+      new CopyWebpackPlugin([{
+        from: path.join(__dirname, "src", "assets", "favicon-editor.ico"),
+        to: "assets/images/favicon-editor.ico"
+      }]),
       new HTMLWebpackPlugin({
         template: path.join(__dirname, "src", "index.html"),
         faviconPath: (process.env.BASE_ASSETS_PATH || "/") + "assets/images/favicon.ico"

@@ -1,6 +1,8 @@
 import configs from "../configs";
 import EventEmitter from "eventemitter3";
-import { Socket } from "phoenix";
+import {
+  Socket
+} from "phoenix";
 import uuid from "uuid/v4";
 import AuthContainer from "./AuthContainer";
 import LoginDialog from "./LoginDialog";
@@ -8,10 +10,17 @@ import PublishDialog from "./PublishDialog";
 import ProgressDialog from "../ui/dialogs/ProgressDialog";
 import PerformanceCheckDialog from "../ui/dialogs/PerformanceCheckDialog";
 import jwtDecode from "jwt-decode";
-import { buildAbsoluteURL } from "url-toolkit";
+import {
+  buildAbsoluteURL
+} from "url-toolkit";
 import PublishedSceneDialog from "./PublishedSceneDialog";
-import { matchesFileTypes, AudioFileTypes } from "../ui/assets/fileTypes";
-import { RethrownError } from "../editor/utils/errors";
+import {
+  matchesFileTypes,
+  AudioFileTypes
+} from "../ui/assets/fileTypes";
+import {
+  RethrownError
+} from "../editor/utils/errors";
 
 // Media related functions should be kept up to date with Hubs media-utils:
 // https://github.com/mozilla/hubs/blob/master/src/utils/media-utils.js
@@ -63,19 +72,20 @@ export const proxiedUrlFor = url => {
   }
 
   // return `https://${configs.CORS_PROXY_SERVER}/${url}`;
-  
+
   if (configs.CORS_PROXY_SERVER) {
-     return `https://${configs.CORS_PROXY_SERVER}/${url}`;
+    console.log("===========CORS_PROXY_SERVER: " + configs.CORS_PROXY_SERVER);
+    return `https://${configs.CORS_PROXY_SERVER}/${url}`;
   } else {
-     return url;
+    return url;
   }
-  
+
 };
 
 export const scaledThumbnailUrlFor = (url, width, height) => {
-//  if (configs.RETICULUM_SERVER.includes("hubs.local") && url.includes("hubs.local")) {
-//    return url;
-//  }
+  //  if (configs.RETICULUM_SERVER.includes("hubs.local") && url.includes("hubs.local")) {
+  //    return url;
+  //  }
 
   if (configs.RETICULUM_SERVER) {
     return url;
@@ -105,7 +115,10 @@ export default class Project extends EventEmitter {
   constructor() {
     super();
 
-    const { protocol, host } = new URL(window.location.href);
+    const {
+      protocol,
+      host
+    } = new URL(window.location.href);
 
     this.serverURL = protocol + "//" + host;
     this.apiURL = `https://${RETICULUM_SERVER}`;
@@ -123,7 +136,11 @@ export default class Project extends EventEmitter {
   async authenticate(email, signal) {
     const reticulumServer = RETICULUM_SERVER;
     const socketUrl = `wss://${reticulumServer}/socket`;
-    const socket = new Socket(socketUrl, { params: { session_id: uuid() } });
+    const socket = new Socket(socketUrl, {
+      params: {
+        session_id: uuid()
+      }
+    });
     socket.connect();
 
     const channel = socket.channel(`auth:${uuid()}`);
@@ -134,23 +151,33 @@ export default class Project extends EventEmitter {
 
     await new Promise((resolve, reject) =>
       channel
-        .join()
-        .receive("ok", resolve)
-        .receive("error", err => {
-          signal.removeEventListener("abort", onAbort);
-          reject(err);
-        })
+      .join()
+      .receive("ok", resolve)
+      .receive("error", err => {
+        signal.removeEventListener("abort", onAbort);
+        reject(err);
+      })
     );
 
     const authComplete = new Promise(resolve =>
-      channel.on("auth_credentials", ({ credentials: token }) => {
-        localStorage.setItem(LOCAL_STORE_KEY, JSON.stringify({ credentials: { email, token } }));
+      channel.on("auth_credentials", ({
+        credentials: token
+      }) => {
+        localStorage.setItem(LOCAL_STORE_KEY, JSON.stringify({
+          credentials: {
+            email,
+            token
+          }
+        }));
         this.emit("authentication-changed", true);
         resolve();
       })
     );
 
-    channel.push("auth_request", { email, origin: "spoke" });
+    channel.push("auth_request", {
+      email,
+      origin: "spoke"
+    });
 
     signal.removeEventListener("abort", onAbort);
 
@@ -210,7 +237,9 @@ export default class Project extends EventEmitter {
       authorization: `Bearer ${token}`
     };
 
-    const response = await this.fetch(`https://${RETICULUM_SERVER}/api/v1/projects`, { headers });
+    const response = await this.fetch(`https://${RETICULUM_SERVER}/api/v1/projects`, {
+      headers
+    });
 
     const json = await response.json();
 
@@ -246,7 +275,9 @@ export default class Project extends EventEmitter {
       authorization: `Bearer ${token}`
     };
 
-    const response = await this.fetch(`https://${RETICULUM_SERVER}/api/v1/scenes/projectless`, { headers });
+    const response = await this.fetch(`https://${RETICULUM_SERVER}/api/v1/scenes/projectless`, {
+      headers
+    });
 
     const json = await response.json();
 
@@ -259,7 +290,9 @@ export default class Project extends EventEmitter {
 
   async resolveUrl(url, index) {
     if (!shouldCorsProxy(url)) {
-      return { origin: url };
+      return {
+        origin: url
+      };
     }
 
     const cacheKey = `${url}|${index}`;
@@ -267,8 +300,15 @@ export default class Project extends EventEmitter {
 
     const request = this.fetch(`https://${RETICULUM_SERVER}/api/v1/media`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ media: { url, index } })
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        media: {
+          url,
+          index
+        }
+      })
     }).then(async response => {
       if (!response.ok) {
         const message = `Error resolving url "${url}":\n  `;
@@ -289,7 +329,9 @@ export default class Project extends EventEmitter {
   }
 
   fetchContentType(accessibleUrl) {
-    return this.fetch(accessibleUrl, { method: "HEAD" }).then(r => r.headers.get("content-type"));
+    return this.fetch(accessibleUrl, {
+      method: "HEAD"
+    }).then(r => r.headers.get("content-type"));
   }
 
   async getContentType(url) {
@@ -308,7 +350,9 @@ export default class Project extends EventEmitter {
     const absoluteUrl = new URL(url, window.location).href;
 
     if (absoluteUrl.startsWith(this.serverURL)) {
-      return { accessibleUrl: absoluteUrl };
+      return {
+        accessibleUrl: absoluteUrl
+      };
     }
 
     const cacheKey = `${absoluteUrl}|${index}`;
@@ -335,17 +379,30 @@ export default class Project extends EventEmitter {
       try {
         if (contentType === "model/gltf+zip") {
           // TODO: Sketchfab object urls should be revoked after they are loaded by the glTF loader.
-          const { getFilesFromSketchfabZip } = await import(
-            /* webpackChunkName: "SketchfabZipLoader", webpackPrefetch: true */ "./SketchfabZipLoader"
+          const {
+            getFilesFromSketchfabZip
+          } = await import(
+            /* webpackChunkName: "SketchfabZipLoader", webpackPrefetch: true */
+            "./SketchfabZipLoader"
           );
           const files = await getFilesFromSketchfabZip(accessibleUrl);
-          return { canonicalUrl, accessibleUrl: files["scene.gtlf"].url, contentType, files };
+          return {
+            canonicalUrl,
+            accessibleUrl: files["scene.gtlf"].url,
+            contentType,
+            files
+          };
         }
       } catch (error) {
         throw new RethrownError(`Error loading Sketchfab model "${accessibleUrl}"`, error);
       }
 
-      return { canonicalUrl, accessibleUrl, contentType, meta };
+      return {
+        canonicalUrl,
+        accessibleUrl,
+        contentType,
+        meta
+      };
     })();
 
     resolveMediaCache.set(cacheKey, request);
@@ -416,7 +473,10 @@ export default class Project extends EventEmitter {
       searchParams.set("cursor", cursor);
     }
 
-    const resp = await this.fetch(url, { headers, signal });
+    const resp = await this.fetch(url, {
+      headers,
+      signal
+    });
 
     if (signal.aborted) {
       const error = new Error("Media search aborted");
@@ -468,7 +528,9 @@ export default class Project extends EventEmitter {
 
     const {
       file_id: thumbnail_file_id,
-      meta: { access_token: thumbnail_file_token }
+      meta: {
+        access_token: thumbnail_file_token
+      }
     } = await this.upload(thumbnailBlob, undefined, signal);
 
     if (signal.aborted) {
@@ -476,10 +538,14 @@ export default class Project extends EventEmitter {
     }
 
     const serializedScene = scene.serialize();
-    const projectBlob = new Blob([JSON.stringify(serializedScene)], { type: "application/json" });
+    const projectBlob = new Blob([JSON.stringify(serializedScene)], {
+      type: "application/json"
+    });
     const {
       file_id: project_file_id,
-      meta: { access_token: project_file_token }
+      meta: {
+        access_token: project_file_token
+      }
     } = await this.upload(projectBlob, undefined, signal);
 
     if (signal.aborted) {
@@ -505,11 +571,18 @@ export default class Project extends EventEmitter {
       project.parent_scene_id = parentSceneId;
     }
 
-    const body = JSON.stringify({ project });
+    const body = JSON.stringify({
+      project
+    });
 
     const projectEndpoint = `https://${RETICULUM_SERVER}/api/v1/projects`;
 
-    const resp = await this.fetch(projectEndpoint, { method: "POST", headers, body, signal });
+    const resp = await this.fetch(projectEndpoint, {
+      method: "POST",
+      headers,
+      body,
+      signal
+    });
 
     if (signal.aborted) {
       throw new Error("Save project aborted");
@@ -558,7 +631,10 @@ export default class Project extends EventEmitter {
 
     const projectEndpoint = `https://${RETICULUM_SERVER}/api/v1/projects/${projectId}`;
 
-    const resp = await this.fetch(projectEndpoint, { method: "DELETE", headers });
+    const resp = await this.fetch(projectEndpoint, {
+      method: "DELETE",
+      headers
+    });
 
     if (resp.status === 401) {
       throw new Error("Not authenticated");
@@ -595,7 +671,9 @@ export default class Project extends EventEmitter {
 
     const {
       file_id: thumbnail_file_id,
-      meta: { access_token: thumbnail_file_token }
+      meta: {
+        access_token: thumbnail_file_token
+      }
     } = await this.upload(thumbnailBlob, undefined, signal);
 
     if (signal.aborted) {
@@ -603,10 +681,14 @@ export default class Project extends EventEmitter {
     }
 
     const serializedScene = editor.scene.serialize();
-    const projectBlob = new Blob([JSON.stringify(serializedScene)], { type: "application/json" });
+    const projectBlob = new Blob([JSON.stringify(serializedScene)], {
+      type: "application/json"
+    });
     const {
       file_id: project_file_id,
-      meta: { access_token: project_file_token }
+      meta: {
+        access_token: project_file_token
+      }
     } = await this.upload(projectBlob, undefined, signal);
 
     if (signal.aborted) {
@@ -640,7 +722,12 @@ export default class Project extends EventEmitter {
 
     const projectEndpoint = `https://${RETICULUM_SERVER}/api/v1/projects/${projectId}`;
 
-    const resp = await this.fetch(projectEndpoint, { method: "PATCH", headers, body, signal });
+    const resp = await this.fetch(projectEndpoint, {
+      method: "PATCH",
+      headers,
+      body,
+      signal
+    });
 
     const json = await resp.json();
 
@@ -753,7 +840,12 @@ export default class Project extends EventEmitter {
       const userInfo = this.getUserInfo();
 
       // Gather all the info needed to display the publish dialog
-      let { name, creatorAttribution, allowRemixing, allowPromotion } = scene.metadata;
+      let {
+        name,
+        creatorAttribution,
+        allowRemixing,
+        allowPromotion
+      } = scene.metadata;
 
       name = (project.scene && project.scene.name) || name || editor.scene.name;
 
@@ -801,7 +893,9 @@ export default class Project extends EventEmitter {
       });
 
       // Save the creatorAttribution to localStorage so that the user doesn't have to input it again
-      this.setUserInfo({ creatorAttribution: publishParams.creatorAttribution });
+      this.setUserInfo({
+        creatorAttribution: publishParams.creatorAttribution
+      });
 
       showDialog(ProgressDialog, {
         title: "Publishing Scene",
@@ -813,7 +907,12 @@ export default class Project extends EventEmitter {
       });
 
       // Clone the existing scene, process it for exporting, and then export as a glb blob
-      const { glbBlob, scores } = await editor.exportScene(abortController.signal, { scores: true });
+      const {
+        glbBlob,
+        scores
+      } = await editor.exportScene(abortController.signal, {
+        scores: true
+      });
 
       if (signal.aborted) {
         const error = new Error("Publish project aborted");
@@ -837,7 +936,9 @@ export default class Project extends EventEmitter {
 
       // Serialize Spoke scene
       const serializedScene = editor.scene.serialize();
-      const sceneBlob = new Blob([JSON.stringify(serializedScene)], { type: "application/json" });
+      const sceneBlob = new Blob([JSON.stringify(serializedScene)], {
+        type: "application/json"
+      });
 
       showDialog(ProgressDialog, {
         title: "Publishing Scene",
@@ -866,7 +967,9 @@ export default class Project extends EventEmitter {
       // Upload the screenshot file
       const {
         file_id: screenshotId,
-        meta: { access_token: screenshotToken }
+        meta: {
+          access_token: screenshotToken
+        }
       } = await this.upload(screenshotBlob, undefined, abortController.signal);
 
       if (signal.aborted) {
@@ -877,11 +980,12 @@ export default class Project extends EventEmitter {
 
       const {
         file_id: glbId,
-        meta: { access_token: glbToken }
+        meta: {
+          access_token: glbToken
+        }
       } = await this.upload(glbBlob, uploadProgress => {
         showDialog(
-          ProgressDialog,
-          {
+          ProgressDialog, {
             title: "Publishing Scene",
             message: `Uploading scene: ${Math.floor(uploadProgress * 100)}%`,
             onCancel: () => {
@@ -900,7 +1004,9 @@ export default class Project extends EventEmitter {
 
       const {
         file_id: sceneFileId,
-        meta: { access_token: sceneFileToken }
+        meta: {
+          access_token: sceneFileToken
+        }
       } = await this.upload(sceneBlob, undefined, abortController.signal);
 
       if (signal.aborted) {
@@ -931,7 +1037,9 @@ export default class Project extends EventEmitter {
         "content-type": "application/json",
         authorization: `Bearer ${token}`
       };
-      const body = JSON.stringify({ scene: sceneParams });
+      const body = JSON.stringify({
+        scene: sceneParams
+      });
 
       const resp = await this.fetch(`https://${RETICULUM_SERVER}/api/v1/projects/${project.project_id}/publish`, {
         method: "POST",
@@ -989,7 +1097,9 @@ export default class Project extends EventEmitter {
     if (screenshotFile) {
       const {
         file_id,
-        meta: { access_token }
+        meta: {
+          access_token
+        }
       } = await this.upload(screenshotFile, null, signal);
       screenshotId = file_id;
       screenshotToken = access_token;
@@ -999,7 +1109,9 @@ export default class Project extends EventEmitter {
     if (glbFile) {
       const {
         file_id,
-        meta: { access_token }
+        meta: {
+          access_token
+        }
       } = await this.upload(glbFile, null, signal);
       glbId = file_id;
       glbToken = access_token;
@@ -1018,7 +1130,9 @@ export default class Project extends EventEmitter {
       ...params
     };
 
-    const body = JSON.stringify({ scene: sceneParams });
+    const body = JSON.stringify({
+      scene: sceneParams
+    });
 
     const resp = await this.fetch(`https://${RETICULUM_SERVER}/api/v1/scenes${sceneId ? "/" + sceneId : ""}`, {
       method: sceneId ? "PUT" : "POST",
@@ -1031,7 +1145,9 @@ export default class Project extends EventEmitter {
 
   async upload(blob, onUploadProgress, signal) {
     // Use direct upload API, see: https://github.com/mozilla/reticulum/pull/319
-    const { phx_host: uploadHost } = await (await this.fetch(`https://${RETICULUM_SERVER}/api/v1/meta`)).json();
+    const {
+      phx_host: uploadHost
+    } = await (await this.fetch(`https://${RETICULUM_SERVER}/api/v1/meta`)).json();
     const uploadPort = new URL(`https://${RETICULUM_SERVER}`).port;
 
     return await new Promise((resolve, reject) => {
@@ -1150,7 +1266,9 @@ export default class Project extends EventEmitter {
 
     const {
       file_id: asset_file_id,
-      meta: { access_token: asset_access_token }
+      meta: {
+        access_token: asset_access_token
+      }
     } = await this.upload(file, onProgress, signal);
 
     const delta = Date.now() - this.lastUploadAssetRequest;
@@ -1176,7 +1294,12 @@ export default class Project extends EventEmitter {
       }
     });
 
-    const resp = await this.fetch(endpoint, { method: "POST", headers, body, signal });
+    const resp = await this.fetch(endpoint, {
+      method: "POST",
+      headers,
+      body,
+      signal
+    });
 
     const json = await resp.json();
 
@@ -1191,7 +1314,9 @@ export default class Project extends EventEmitter {
       type: asset.type,
       attributions: {},
       images: {
-        preview: { url: asset.thumbnail_url }
+        preview: {
+          url: asset.thumbnail_url
+        }
       }
     };
   }
@@ -1206,7 +1331,10 @@ export default class Project extends EventEmitter {
 
     const assetEndpoint = `https://${RETICULUM_SERVER}/api/v1/assets/${assetId}`;
 
-    const resp = await this.fetch(assetEndpoint, { method: "DELETE", headers });
+    const resp = await this.fetch(assetEndpoint, {
+      method: "DELETE",
+      headers
+    });
 
     if (resp.status === 401) {
       throw new Error("Not authenticated");
@@ -1229,7 +1357,10 @@ export default class Project extends EventEmitter {
 
     const projectAssetEndpoint = `https://${RETICULUM_SERVER}/api/v1/projects/${projectId}/assets/${assetId}`;
 
-    const resp = await this.fetch(projectAssetEndpoint, { method: "DELETE", headers });
+    const resp = await this.fetch(projectAssetEndpoint, {
+      method: "DELETE",
+      headers
+    });
 
     if (resp.status === 401) {
       throw new Error("Not authenticated");
