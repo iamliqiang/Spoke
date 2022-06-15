@@ -1,4 +1,4 @@
-import configs from "../configs";
+import configs from "../../configs";
 import {
   Box3,
   Sphere,
