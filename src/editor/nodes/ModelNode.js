@@ -21,9 +21,6 @@ import {
   getObjectPerfIssues,
   maybeAddLargeFileIssue
 } from "../utils/performance";
-import {
-  config
-} from "webpack";
 
 
 const defaultStats = {
