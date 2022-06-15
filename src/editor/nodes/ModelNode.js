@@ -20,6 +20,11 @@ import {
   getObjectPerfIssues,
   maybeAddLargeFileIssue
 } from "../utils/performance";
+import {
+  config
+} from "webpack";
+
+import configs from "../../configs";
 
 const defaultStats = {
   nodes: 0,
@@ -179,6 +184,7 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     this.gltfJson = null;
 
     console.log("\n\n==================>ModelNode nextSrc\n\n" + nextSrc);
+    console.log("\n\n==================>ModelNode CORS_PROXY_SERVER\n\n" + config.CORS_PROXY_SERVER);
 
 
     if (this.model) {
@@ -203,9 +209,17 @@ export default class ModelNode extends EditorNodeMixin(Model) {
         this.editor.renderer.removeBatchedObject(this.model);
       }
 
-      console.log("\n\n==================>ModelNode accessibleUrl\n\n" + accessibleUrl);
 
-      await super.load(accessibleUrl);
+
+      let cors_accessibleUrl = "";
+      if (configs.CORS_PROXY_SERVER) {
+        cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
+      } else {
+        cors_accessibleUrl = accessibleUrl;
+      }
+
+      console.log("\n\n==================>ModelNode CORS accessibleUrl\n\n" + cors_accessibleUrl);
+      await super.load(cors_accessibleUrl);
 
 
       console.log("\n\n==================>ModelNode after-await\n\n");
