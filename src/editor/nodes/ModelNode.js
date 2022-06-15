@@ -207,16 +207,19 @@ export default class ModelNode extends EditorNodeMixin(Model) {
       }
 
 
-      let cors_accessibleUrl = "";
-      if (configs.CORS_PROXY_SERVER) {
-        cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
-      } else {
-        cors_accessibleUrl = accessibleUrl;
-      }
 
-      console.log("\n\n==================>ModelNode CORS accessibleUrl\n\n" + cors_accessibleUrl);
-      await super.load(cors_accessibleUrl);
 
+      // let cors_accessibleUrl = "";
+      // if (configs.CORS_PROXY_SERVER) {
+      //   cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
+      // } else {
+      //   cors_accessibleUrl = accessibleUrl;
+      // }
+
+      console.log("\n\n==================>ModelNode CORS accessibleUrl\n\n" + accessibleUrl);
+      // await super.load(cors_accessibleUrl);
+
+      await super.load(accessibleUrl);
 
       console.log("\n\n==================>ModelNode after-await\n\n");
 
