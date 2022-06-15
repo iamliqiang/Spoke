@@ -1,3 +1,4 @@
+import configs from "../configs";
 import {
   Box3,
   Sphere,
@@ -24,7 +25,6 @@ import {
   config
 } from "webpack";
 
-import configs from "../../configs";
 
 const defaultStats = {
   nodes: 0,
@@ -184,7 +184,7 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     this.gltfJson = null;
 
     console.log("\n\n==================>ModelNode nextSrc\n\n" + nextSrc);
-    console.log("\n\n==================>ModelNode CORS_PROXY_SERVER\n\n" + config.CORS_PROXY_SERVER);
+    console.log("\n\n==================>ModelNode CORS_PROXY_SERVER\n\n" + configs.CORS_PROXY_SERVER);
 
 
     if (this.model) {
@@ -208,7 +208,6 @@ export default class ModelNode extends EditorNodeMixin(Model) {
       if (this.model) {
         this.editor.renderer.removeBatchedObject(this.model);
       }
-
 
 
       let cors_accessibleUrl = "";

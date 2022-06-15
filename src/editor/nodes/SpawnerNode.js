@@ -117,7 +117,7 @@ export default class SpawnerNode extends EditorNodeMixin(Model) {
     this.hideErrorIcon();
     this.showLoadingCube();
 
-    console.log("==================> SpawnerNode");
+    console.log("\n\n==================>SpawnerNode\n\n");
 
 
     try {
