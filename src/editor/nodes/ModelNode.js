@@ -178,7 +178,7 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     this.stats = defaultStats;
     this.gltfJson = null;
 
-    console.log("\n\n==================>ModelNode\n\n");
+    console.log("\n\n==================>ModelNode\n\n" + nextSrc);
 
 
     if (this.model) {
