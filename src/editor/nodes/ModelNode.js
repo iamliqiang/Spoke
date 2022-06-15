@@ -1,11 +1,25 @@
-import { Box3, Sphere, PropertyBinding } from "three";
+import {
+  Box3,
+  Sphere,
+  PropertyBinding
+} from "three";
 import Model from "../objects/Model";
 import EditorNodeMixin from "./EditorNodeMixin";
-import { setStaticMode, StaticModes } from "../StaticMode";
+import {
+  setStaticMode,
+  StaticModes
+} from "../StaticMode";
 import cloneObject3D from "../utils/cloneObject3D";
-import { getComponents } from "../gltf/moz-hubs-components";
-import { RethrownError } from "../utils/errors";
-import { getObjectPerfIssues, maybeAddLargeFileIssue } from "../utils/performance";
+import {
+  getComponents
+} from "../gltf/moz-hubs-components";
+import {
+  RethrownError
+} from "../utils/errors";
+import {
+  getObjectPerfIssues,
+  maybeAddLargeFileIssue
+} from "../utils/performance";
 
 const defaultStats = {
   nodes: 0,
@@ -35,7 +49,10 @@ export default class ModelNode extends EditorNodeMixin(Model) {
 
     loadAsync(
       (async () => {
-        const { src, attribution } = json.components.find(c => c.name === "gltf-model").props;
+        const {
+          src,
+          attribution
+        } = json.components.find(c => c.name === "gltf-model").props;
 
         await node.load(src, onError);
 
@@ -43,7 +60,11 @@ export default class ModelNode extends EditorNodeMixin(Model) {
         if (attribution && typeof attribution === "string") {
           const [name, author] = attribution.split(" by ");
           node.attribution = node.attribution || {};
-          Object.assign(node.attribution, author ? { author: author } : null, name ? { title: name } : null);
+          Object.assign(node.attribution, author ? {
+            author: author
+          } : null, name ? {
+            title: name
+          } : null);
         } else {
           node.attribution = attribution;
         }
@@ -55,7 +76,10 @@ export default class ModelNode extends EditorNodeMixin(Model) {
         const loopAnimationComponent = json.components.find(c => c.name === "loop-animation");
 
         if (loopAnimationComponent && loopAnimationComponent.props) {
-          const { clip, activeClipIndices } = loopAnimationComponent.props;
+          const {
+            clip,
+            activeClipIndices
+          } = loopAnimationComponent.props;
 
           if (clip !== undefined && node.model && node.model.animations) {
             // DEPRECATED: Old loop-animation component stored the clip name rather than the clip index
@@ -123,7 +147,11 @@ export default class ModelNode extends EditorNodeMixin(Model) {
   async loadGLTF(src) {
     const loader = this.editor.gltfCache.getLoader(src);
 
-    const { scene, json, stats } = await loader.getDependency("gltf");
+    const {
+      scene,
+      json,
+      stats
+    } = await loader.getDependency("gltf");
 
     this.stats = stats;
     this.gltfJson = json;
@@ -135,6 +163,7 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     return clonedScene;
   }
 
+  // maxwatch1
   // Overrides Model's load method and resolves the src url before loading.
   async load(src, onError) {
     const nextSrc = src || "";
@@ -149,6 +178,9 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     this.stats = defaultStats;
     this.gltfJson = null;
 
+    console.log("\n\n==================>ModelNode\n\n");
+
+
     if (this.model) {
       this.editor.renderer.removeBatchedObject(this.model);
       this.remove(this.model);
@@ -159,7 +191,11 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     this.showLoadingCube();
 
     try {
-      const { accessibleUrl, files, meta } = await this.editor.api.resolveMedia(src);
+      const {
+        accessibleUrl,
+        files,
+        meta
+      } = await this.editor.api.resolveMedia(src);
 
       this.meta = meta;
 
@@ -258,7 +294,10 @@ export default class ModelNode extends EditorNodeMixin(Model) {
 
       console.error(modelError);
 
-      this.issues.push({ severity: "error", message: "Error loading model." });
+      this.issues.push({
+        severity: "error",
+        message: "Error loading model."
+      });
     }
 
     this.editor.emit("objectsChanged", [this]);
@@ -276,11 +315,20 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     const attributions = {};
     Object.assign(
       attributions,
-      assetDef.extras && assetDef.extras.author
-        ? { author: assetDef.extras.author }
-        : (assetDef.copyright && { author: assetDef.copyright }) || null,
-      assetDef.extras && assetDef.extras.source ? { url: assetDef.extras.source } : null,
-      assetDef.extras && assetDef.extras.title ? { title: assetDef.extras.title } : this.name ? { title: name } : null
+      assetDef.extras && assetDef.extras.author ? {
+        author: assetDef.extras.author
+      } :
+      (assetDef.copyright && {
+        author: assetDef.copyright
+      }) || null,
+      assetDef.extras && assetDef.extras.source ? {
+        url: assetDef.extras.source
+      } : null,
+      assetDef.extras && assetDef.extras.title ? {
+        title: assetDef.extras.title
+      } : this.name ? {
+        title: name
+      } : null
     );
     return attributions;
   }
@@ -321,7 +369,9 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     if (this.model.animations && this.model.animations.length > 0) {
       for (const animation of this.model.animations) {
         for (const track of animation.tracks) {
-          const { nodeName: uuid } = PropertyBinding.parseTrackName(track.name);
+          const {
+            nodeName: uuid
+          } = PropertyBinding.parseTrackName(track.name);
           const animatedNode = this.model.getObjectByProperty("uuid", uuid);
 
           if (!animatedNode) {

@@ -1,10 +1,20 @@
-import { Box3, Sphere } from "three";
+import {
+  Box3,
+  Sphere
+} from "three";
 import Model from "../objects/Model";
 import EditorNodeMixin from "./EditorNodeMixin";
 import cloneObject3D from "../utils/cloneObject3D";
-import { RethrownError } from "../utils/errors";
-import { collectUniqueMaterials } from "../utils/materials";
-import { getObjectPerfIssues, maybeAddLargeFileIssue } from "../utils/performance";
+import {
+  RethrownError
+} from "../utils/errors";
+import {
+  collectUniqueMaterials
+} from "../utils/materials";
+import {
+  getObjectPerfIssues,
+  maybeAddLargeFileIssue
+} from "../utils/performance";
 
 const defaultStats = {
   nodes: 0,
@@ -32,7 +42,10 @@ export default class SpawnerNode extends EditorNodeMixin(Model) {
   static async deserialize(editor, json, loadAsync, onError) {
     const node = await super.deserialize(editor, json);
 
-    const { src, applyGravity } = json.components.find(c => c.name === "spawner").props;
+    const {
+      src,
+      applyGravity
+    } = json.components.find(c => c.name === "spawner").props;
 
     node.applyGravity = !!applyGravity;
 
@@ -66,7 +79,11 @@ export default class SpawnerNode extends EditorNodeMixin(Model) {
   async loadGLTF(src) {
     const loader = this.editor.gltfCache.getLoader(src);
 
-    const { scene, json, stats } = await loader.getDependency("gltf");
+    const {
+      scene,
+      json,
+      stats
+    } = await loader.getDependency("gltf");
 
     this.stats = stats;
     this.gltfJson = json;
@@ -76,6 +93,7 @@ export default class SpawnerNode extends EditorNodeMixin(Model) {
     return cloneObject3D(scene);
   }
 
+  // maxwatch2
   // Overrides Model's load method and resolves the src url before loading.
   async load(src, onError) {
     const nextSrc = src || "";
@@ -99,8 +117,15 @@ export default class SpawnerNode extends EditorNodeMixin(Model) {
     this.hideErrorIcon();
     this.showLoadingCube();
 
+    console.log("==================> SpawnerNode");
+
+
     try {
-      const { accessibleUrl, files, meta } = await this.editor.api.resolveMedia(src);
+      const {
+        accessibleUrl,
+        files,
+        meta
+      } = await this.editor.api.resolveMedia(src);
 
       this.meta = meta;
 
@@ -197,7 +222,10 @@ export default class SpawnerNode extends EditorNodeMixin(Model) {
 
       console.error(spawnerError);
 
-      this.issues.push({ severity: "error", message: "Error loading model." });
+      this.issues.push({
+        severity: "error",
+        message: "Error loading model."
+      });
     }
 
     this.editor.emit("objectsChanged", [this]);
@@ -268,7 +296,10 @@ export default class SpawnerNode extends EditorNodeMixin(Model) {
 
       const materials = collectUniqueMaterials(this.model);
 
-      return { meshes, materials };
+      return {
+        meshes,
+        materials
+      };
     }
   }
 }
