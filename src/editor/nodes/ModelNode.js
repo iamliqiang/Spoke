@@ -178,7 +178,7 @@ export default class ModelNode extends EditorNodeMixin(Model) {
     this.stats = defaultStats;
     this.gltfJson = null;
 
-    console.log("\n\n==================>ModelNode\n\n" + nextSrc);
+    console.log("\n\n==================>ModelNode nextSrc\n\n" + nextSrc);
 
 
     if (this.model) {
@@ -203,7 +203,12 @@ export default class ModelNode extends EditorNodeMixin(Model) {
         this.editor.renderer.removeBatchedObject(this.model);
       }
 
+      console.log("\n\n==================>ModelNode accessibleUrl\n\n" + accessibleUrl);
+
       await super.load(accessibleUrl);
+
+
+      console.log("\n\n==================>ModelNode after-await\n\n");
 
       if (this.stats) {
         const textureInfo = this.stats.textureInfo;
