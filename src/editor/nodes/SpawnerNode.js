@@ -135,15 +135,16 @@ export default class SpawnerNode extends EditorNodeMixin(Model) {
       }
 
 
-      await super.load(accessibleUrl);
-      //  let cors_accessibleUrl = "";
-      //  if (configs.CORS_PROXY_SERVER) {
-      //    cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
-      //  } else {
-      //    cors_accessibleUrl = accessibleUrl;
-      //  }
+      //await super.load(accessibleUrl);
 
-      // await super.load(cors_accessibleUrl);
+      let cors_accessibleUrl = "";
+      if (configs.CORS_PROXY_SERVER) {
+        cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
+      } else {
+        cors_accessibleUrl = accessibleUrl;
+      }
+
+      await super.load(cors_accessibleUrl);
 
 
       if (this.stats) {
