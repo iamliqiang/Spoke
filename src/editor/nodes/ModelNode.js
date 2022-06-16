@@ -216,7 +216,7 @@ export default class ModelNode extends EditorNodeMixin(Model) {
         cors_accessibleUrl = accessibleUrl;
       }
 
-      console.log("\n\n==================>ModelNode CORS accessibleUrl\n\n" + accessibleUrl);
+      console.log("\n\n==================>ModelNode CORS accessibleUrl\n\n" + cors_accessibleUrl);
       await super.load(cors_accessibleUrl);
 
       // await super.load(accessibleUrl);
