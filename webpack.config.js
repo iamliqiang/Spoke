@@ -260,7 +260,7 @@ module.exports = env => {
         RETICULUM_SERVER: undefined,
         THUMBNAIL_SERVER: "",
         HUBS_SERVER: undefined,
-        CORS_PROXY_SERVER: "proxy.substack.cloud:8888:8888",
+        CORS_PROXY_SERVER: "proxy.substack.cloud:8888",
         BASE_ASSETS_PATH: "",
         NON_CORS_PROXY_DOMAINS: "",
         ROUTER_BASE_PATH: "",
