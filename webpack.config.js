@@ -255,12 +255,12 @@ module.exports = env => {
         faviconPath: (process.env.BASE_ASSETS_PATH || "/") + "assets/images/favicon.ico"
       }),
       new webpack.EnvironmentPlugin({
-        BUILD_VERSION: "dev",
-        NODE_ENV: "development",
+        BUILD_VERSION: "prod",
+        NODE_ENV: "production",
         RETICULUM_SERVER: undefined,
         THUMBNAIL_SERVER: "",
         HUBS_SERVER: undefined,
-        CORS_PROXY_SERVER: "0xspace.net:8888",
+        CORS_PROXY_SERVER: "proxy.substack.cloud:8888:8888",
         BASE_ASSETS_PATH: "",
         NON_CORS_PROXY_DOMAINS: "",
         ROUTER_BASE_PATH: "",
