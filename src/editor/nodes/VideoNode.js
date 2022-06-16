@@ -1,3 +1,4 @@
+import configs from "../../configs";
 import Video from "../objects/Video";
 import AudioParamsNode from "./AudioParamsNode";
 import Hls from "hls.js/dist/hls.light";
@@ -117,7 +118,16 @@ export default class VideoNode extends AudioParamsNode(Video) {
         });
       }
 
-      await super.load(accessibleUrl, contentType);
+      let cors_accessibleUrl = "";
+      if (configs.CORS_PROXY_SERVER) {
+        cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
+      } else {
+        cors_accessibleUrl = accessibleUrl;
+      }
+
+      await super.load(cors_accessibleUrl, contentType);
+
+     // await super.load(accessibleUrl, contentType);
 
       if (isHls && this.hls) {
         this.hls.stopLoad();

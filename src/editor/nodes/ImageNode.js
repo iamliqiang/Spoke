@@ -1,3 +1,4 @@
+import configs from "../../configs";
 import EditorNodeMixin from "./EditorNodeMixin";
 import Image, { ImageAlphaMode } from "../objects/Image";
 import spokeLogoSrc from "../../assets/spoke-icon.png";
@@ -88,7 +89,16 @@ export default class ImageNode extends EditorNodeMixin(Image) {
 
       this.updateAttribution();
 
-      await super.load(accessibleUrl);
+      let cors_accessibleUrl = "";
+      if (configs.CORS_PROXY_SERVER) {
+        cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
+      } else {
+        cors_accessibleUrl = accessibleUrl;
+      }
+
+      await super.load(cors_accessibleUrl);
+
+     // await super.load(accessibleUrl);
       this.issues = getObjectPerfIssues(this._mesh, false);
 
       const perfEntries = performance.getEntriesByName(accessibleUrl);
