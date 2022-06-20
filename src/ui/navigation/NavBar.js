@@ -1,11 +1,17 @@
-import React, { Component } from "react";
+import React, {
+  Component
+} from "react";
 import configs from "../../configs";
-import { Link } from "react-router-dom";
+import {
+  Link
+} from "react-router-dom";
 import PropTypes from "prop-types";
-import { withAuth } from "../contexts/AuthContext";
+import {
+  withAuth
+} from "../contexts/AuthContext";
 import styled from "styled-components";
 
-const StyledNavBar = styled.header`
+const StyledNavBar = styled.header `
   position: relative;
   display: flex;
   align-items: center;
@@ -18,7 +24,7 @@ const StyledNavBar = styled.header`
   }
 `;
 
-const IconContainer = styled.div`
+const IconContainer = styled.div `
   margin-right: 20px;
 
   a {
@@ -31,7 +37,7 @@ const IconContainer = styled.div`
   }
 `;
 
-const MiddleContainer = styled.div`
+const MiddleContainer = styled.div `
   display: flex;
   flex: 1;
 
@@ -40,7 +46,7 @@ const MiddleContainer = styled.div`
   }
 `;
 
-const NavList = styled.ul`
+const NavList = styled.ul `
   display: flex;
 
   li {
@@ -48,7 +54,7 @@ const NavList = styled.ul`
   }
 `;
 
-const RightContainer = styled.div`
+const RightContainer = styled.div `
   display: flex;
   justify-content: flex-end;
 
@@ -63,60 +69,87 @@ class NavBar extends Component {
   };
 
   render() {
-    return (
-      <StyledNavBar>
-        <IconContainer>
-          <Link to="/">
-            <img src={configs.icon()} alt={configs.name()} />
-          </Link>
-        </IconContainer>
-        <MiddleContainer>
-          <nav>
-            <NavList>
-              <li>
-                <Link to="/whats-new">What&apos;s New</Link>
-              </li>
-              <li>
-                <a href="https://github.com/mozilla/Spoke" rel="noopener noreferrer">
-                  Source
-                </a>
-              </li>
-              {configs.isMoz() && (
-                <li>
-                  <a href="https://discord.gg/wHmY4nd" rel="noopener noreferrer">
-                    Community
-                  </a>
-                </li>
-              )}
-              {configs.isMoz() && (
-                <li>
-                  <a href="https://hubs.mozilla.com" rel="noopener noreferrer">
-                    Hubs
-                  </a>
-                </li>
-              )}
-            </NavList>
-          </nav>
-        </MiddleContainer>
-        <RightContainer>
-          <NavList>
-            {this.props.isAuthenticated ? (
-              <>
-                <li>
-                  <Link to="/projects">Projects</Link>
-                </li>
-                <li>
-                  <Link to="/logout">Logout</Link>
-                </li>
-              </>
-            ) : (
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-            )}
-          </NavList>
-        </RightContainer>
-      </StyledNavBar>
+    return ( <
+      StyledNavBar >
+      <
+      IconContainer >
+      <
+      Link to = "/" >
+      <
+      img src = {
+        configs.icon()
+      }
+      alt = {
+        configs.name()
+      }
+      /> < /
+      Link > <
+      /IconContainer> <
+      MiddleContainer >
+      <
+      nav >
+      <
+      NavList >
+      <
+      li >
+      <
+      Link to = "/whats-new" > What & apos; s New < /Link> < /
+      li > <
+      li >
+      <
+      a href = "https://0xspace.net"
+      rel = "noopener noreferrer" >
+      Home <
+      /a> < /
+      li > {
+        configs.isMoz() && ( <
+          li >
+          <
+          a href = "https://discord.gg/wHmY4nd"
+          rel = "noopener noreferrer" >
+          Community <
+          /a> < /
+          li >
+        )
+      } {
+        configs.isMoz() && ( <
+          li >
+          <
+          a href = "https://hubs.mozilla.com"
+          rel = "noopener noreferrer" >
+          Hubs <
+          /a> < /
+          li >
+        )
+      } <
+      /NavList> < /
+      nav > <
+      /MiddleContainer> <
+      RightContainer >
+      <
+      NavList > {
+        this.props.isAuthenticated ? ( <
+          >
+          <
+          li >
+          <
+          Link to = "/projects" > Projects < /Link> < /
+          li > <
+          li >
+          <
+          Link to = "/logout" > Logout < /Link> < /
+          li > <
+          />
+        ) : ( <
+          li >
+          <
+          Link to = "/login" > Login < /Link> < /
+          li >
+        )
+      } <
+      /NavList> < /
+      RightContainer > <
+      /StyledNavBar>
     );
   }
 }
