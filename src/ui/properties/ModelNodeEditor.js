@@ -67,13 +67,13 @@ export default class ModelNodeEditor extends Component {
 
     let theurl = new URL(node.src);
     theurl.port = '';
-    let nodesrc = theurl.toString();
+    node.src = theurl.toString();
 
     return (
       <NodeEditor description={ModelNodeEditor.description} {...this.props}>
         <InputGroup name="Model Url">
           < ModelInput value = {
-            nodesrc
+            node.src
           }
           onChange = {
             this.onChangeSrc
