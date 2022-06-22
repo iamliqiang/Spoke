@@ -28,11 +28,20 @@ export default class SpawnerNodeEditor extends Component {
 
   render() {
     const node = this.props.node;
+    let theurl = new URL(node.src);
+    theurl.port = '';
+    let nodesrc = theurl.toString();
 
     return (
       <NodeEditor {...this.props} description={SpawnerNodeEditor.description}>
         <InputGroup name="Model Url">
-          <ModelInput value={node.src} onChange={this.onChangeSrc} />
+          < ModelInput value = {
+            nodesrc
+          }
+          onChange = {
+            this.onChangeSrc
+          }
+          />
         </InputGroup>
         <InputGroup name="Apply gravity to spawned object">
           <BooleanInput value={node.applyGravity} onChange={this.onChangeApplyGravity} />

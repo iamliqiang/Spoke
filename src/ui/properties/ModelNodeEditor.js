@@ -65,10 +65,20 @@ export default class ModelNodeEditor extends Component {
   render() {
     const node = this.props.node;
 
+    let theurl = new URL(node.src);
+    theurl.port = '';
+    let nodesrc = theurl.toString();
+
     return (
       <NodeEditor description={ModelNodeEditor.description} {...this.props}>
         <InputGroup name="Model Url">
-          <ModelInput value={node.src} onChange={this.onChangeSrc} />
+          < ModelInput value = {
+            nodesrc
+          }
+          onChange = {
+            this.onChangeSrc
+          }
+          />
         </InputGroup>
         <InputGroup name="Loop Animation">
           <SelectInput
