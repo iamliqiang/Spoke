@@ -125,9 +125,9 @@ export default class VideoNode extends AudioParamsNode(Video) {
         cors_accessibleUrl = accessibleUrl;
       }
 
-      await super.load(cors_accessibleUrl, contentType);
+     // await super.load(cors_accessibleUrl, contentType);
 
-     // await super.load(accessibleUrl, contentType);
+      await super.load(accessibleUrl, contentType);
 
       if (isHls && this.hls) {
         this.hls.stopLoad();
