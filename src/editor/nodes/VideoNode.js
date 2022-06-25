@@ -103,6 +103,7 @@ export default class VideoNode extends AudioParamsNode(Video) {
 
     try {
       const { accessibleUrl, contentType, meta } = await this.editor.api.resolveMedia(src);
+      console.log("\n\n==================>VideoNode accessibleUrl\n\n" + accessibleUrl);
 
       this.meta = meta;
 
@@ -118,6 +119,8 @@ export default class VideoNode extends AudioParamsNode(Video) {
         });
       }
 
+
+
       let cors_accessibleUrl = "";
       if (configs.CORS_PROXY_SERVER) {
         cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
@@ -125,9 +128,10 @@ export default class VideoNode extends AudioParamsNode(Video) {
         cors_accessibleUrl = accessibleUrl;
       }
 
-     // await super.load(cors_accessibleUrl, contentType);
+      console.log("\n\n==================>VideoNode CORS accessibleUrl\n\n" + cors_accessibleUrl);
+      await super.load(cors_accessibleUrl, contentType);
 
-      await super.load(accessibleUrl, contentType);
+     // await super.load(accessibleUrl, contentType);
 
       if (isHls && this.hls) {
         this.hls.stopLoad();
