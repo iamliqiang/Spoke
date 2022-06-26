@@ -18,6 +18,10 @@ const imageTransparencyOptions = Object.values(ImageAlphaMode).map(mapValue);
 
 export default function ImageNodeEditor(props) {
   const { editor, node } = props;
+  let theurl = new URL(node.src);
+  theurl.port = '';
+  node.src = theurl.toString();
+
   const onChangeSrc = useSetPropertySelected(editor, "src");
   const onChangeControls = useSetPropertySelected(editor, "controls");
   const onChangeBillboard = useSetPropertySelected(editor, "billboard");
