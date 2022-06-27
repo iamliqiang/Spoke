@@ -90,15 +90,10 @@ export default class ImageNode extends EditorNodeMixin(Image) {
       this.updateAttribution();
 
       let cors_accessibleUrl = "";
-
-      let theurl = new URL(accessibleUrl);
-      theurl.port = '';
-      let noport_accessibleUrl = theurl.toString();
-
       if (configs.CORS_PROXY_SERVER) {
-        cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${noport_accessibleUrl}`;
+        cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
       } else {
-        cors_accessibleUrl = noport_accessibleUrl;
+        cors_accessibleUrl = accessibleUrl;
       }
 
       await super.load(cors_accessibleUrl);
@@ -106,7 +101,7 @@ export default class ImageNode extends EditorNodeMixin(Image) {
      // await super.load(accessibleUrl);
       this.issues = getObjectPerfIssues(this._mesh, false);
 
-      const perfEntries = performance.getEntriesByName(noport_accessibleUrl);
+      const perfEntries = performance.getEntriesByName(accessibleUrl);
 
       if (perfEntries.length > 0) {
         const imageSize = perfEntries[0].encodedBodySize;
