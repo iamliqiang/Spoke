@@ -25,10 +25,6 @@ export default function VideoNodeEditor(props) {
   const onChangeAutoPlay = useSetPropertySelected(editor, "autoPlay");
   const onChangeLoop = useSetPropertySelected(editor, "loop");
 
-  let theurl = new URL(node.src);
-  theurl.port = '';
-  node.src = theurl.toString();
-
   return (
     <NodeEditor description={VideoNodeEditor.description} {...props}>
       <InputGroup name="Video">
