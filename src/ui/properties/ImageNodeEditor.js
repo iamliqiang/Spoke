@@ -22,6 +22,10 @@ export default function ImageNodeEditor(props) {
     node
   } = props;
 
+  let theurl = new URL(node.src);
+  theurl.port = '';
+  node.src = theurl.toString();
+
   const onChangeSrc = useSetPropertySelected(editor, "src");
   const onChangeControls = useSetPropertySelected(editor, "controls");
   const onChangeBillboard = useSetPropertySelected(editor, "billboard");

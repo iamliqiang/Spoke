@@ -90,6 +90,10 @@ export default class ImageNode extends EditorNodeMixin(Image) {
       this.updateAttribution();
 
       let cors_accessibleUrl = "";
+      let theurl = new URL(accessibleUrl);
+      theurl.port = '';
+      accessibleUrl = theurl.toString();
+
       if (configs.CORS_PROXY_SERVER) {
         cors_accessibleUrl = `https://${configs.CORS_PROXY_SERVER}/${accessibleUrl}`;
       } else {
